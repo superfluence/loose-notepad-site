@@ -1,0 +1,55 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Admin Editor</title>
+    <style>
+      body {
+        font-family: system-ui;
+        padding: 20px;
+        max-width: 600px;
+        margin: 0 auto;
+      }
+      textarea {
+        width: 100%;
+        height: 400px;
+        font-family: monospace;
+        font-size: 14px;
+      }
+      button {
+        margin-top: 15px;
+        padding: 10px 14px;
+        font-size: 16px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Admin Editor</h1>
+    <p>Edit the content below and click Save.</p>
+
+    <textarea id="editor"></textarea>
+    <button onclick="saveContent()">Save</button>
+
+    <script>
+      async function loadContent() {
+        const res = await fetch('content.md');
+        const text = await res.text();
+        document.getElementById('editor').value = text;
+      }
+
+      async function saveContent() {
+        const newText = document.getElementById('editor').value;
+
+        await fetch('/api/save', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ text: newText })
+        });
+
+        alert('Saved.');
+      }
+
+      loadContent();
+    </script>
+  </body>
+</html>
